@@ -44,7 +44,12 @@ router.post("", checkAuth, multer({ storage: storage }).single("image"), (req, r
         id: createdPost._id
       }
     });
-  });
+  })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Creating a post failed!'
+      });
+    });
 });
 
 router.put("/:id", checkAuth, multer({ storage: storage }).single("image"), (req, res, next) => {
@@ -62,13 +67,19 @@ router.put("/:id", checkAuth, multer({ storage: storage }).single("image"), (req
     creator: req.userData.userId
   });
 
-  Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post).then(result => {
-    if (result.nModified > 0) {
-      res.status(200).json({ message: 'Post updated successfully' });
-    } else {
-      res.status(401).json({ message: 'Not authorized!' });
-    }
-  });
+  Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post)
+    .then(result => {
+      if (result.nModified > 0) {
+        res.status(200).json({ message: 'Post updated successfully' });
+      } else {
+        res.status(401).json({ message: 'Not authorized!' });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Coudn't update post!"
+      });
+    });
 });
 
 router.get("", (req, res, next) => {
@@ -92,6 +103,11 @@ router.get("", (req, res, next) => {
         posts: fetchedPosts,
         maxPosts: count
       });
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Fetching posts failed!"
+      });
     });
 });
 
@@ -102,6 +118,10 @@ router.get("/:id", (req, res, next) => {
     } else {
       res.status(404).json({ message: 'Post not Foud!' });
     }
+  }).catch(error => {
+    res.status(500).json({
+      message: "Fetching post failed!"
+    });
   });
 });
 
@@ -112,6 +132,10 @@ router.delete('/:id', checkAuth, (req, res, next) => {
     } else {
       res.status(401).json({ message: 'Not authorized!' });
     }
+  }).catch(error => {
+    res.status(500).json({
+      message: "Fetching post failed!"
+    });
   });
 });
 
