@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: "http://meancourse-env.wtpannpbvc.us-east-2.elasticbeanstalk.com/api"
+  apiUrl: 'http://meancourseenv-env.2bvthtp4bp.us-east-2.elasticbeanstalk.com/api'
 };
